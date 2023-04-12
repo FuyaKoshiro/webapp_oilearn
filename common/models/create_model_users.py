@@ -1,21 +1,15 @@
 import sqlite3
 
 conn = sqlite3.connect("database.db")
-c = conn.cursor()
+cursor = conn.cursor()
 
-c.execute("""
+cursor.execute("""
 CREATE TABLE users (
-user_id INTEGER PRIMARY KEY,
-username CHAR(50),
-email CHAR(50),
-password CHAR(50))
+user_id INTEGER,
+video_code CHAR(100),
+phrase_id CHAR(200),
+date DATESTAMP)
 """)
-
-conn.commit()
-
-c.execute("""
-INSERT INTO users (username, email, password) VALUES (?, ?, ?)
-""", ('test_user', 'test_email', 'test_pass'))
 
 conn.commit()
 conn.close()
