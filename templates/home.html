@@ -1,0 +1,52 @@
+{% extends "index.html" %} 
+
+{% block body %}
+
+
+<div class="container my-auto vh-75">
+  <div class="row ">
+    <div class="col-md-6 d-flex align-items-center">
+      <!-- <div class="d-flex align-items-center justify-content-center m-auto" style="height: 200px;"> -->
+        <div class="m-auto text-center">
+          <h1>Have Fun & Learn</h1>
+          <p>Learn phrases before watching videos</p>
+        
+      </div>
+    </div>
+  
+    <div class="col-md-6">
+      <div class="text-center">
+      <!-- Content for the right column goes here -->
+      <img src="/static/20230214_art_no_bg.png" class="img-fluid max-h-100">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="container">
+  <div class="row">
+  {% for i in range(6) %}
+    <div class="col-md-2 text-center ">
+      <div class="card px-0 mx-0">
+        <a href="/content/{{ video_codes[i] }}">
+          <img src="https://i.ytimg.com/vi/0O_boW9YA7I/hq720.jpg?sqp=-…AFwAcABBg==&rs=AOn4CLBVFL2OZZZeWodftld1LP2oiPpfsA" alt="Example Image">
+        </a>
+        <!-- <img class="card-img-top" src="..." alt="Card image cap">
+        <h5 class="card-title">Card title</h5>
+        <a href="/login" class="w-100"><button class="btn btn-primary btn-block">Click me</button></a> -->
+      </div>
+    </div>
+  {% endfor %}
+  </div>
+</div>
+
+<ul>
+  {% for i in range(length) %}
+  <li>{{ channel_urls[i] }}</li>
+  <li>{{ titles[i] }}</li>
+  <li>{{ video_urls[i] }}</li>
+  <li>{{ thumbnails[i] }}</li>
+  {% endfor %}
+</ul>
+{% endblock %}
