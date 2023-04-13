@@ -3,50 +3,50 @@
 {% block body %}
 
 
-<div class="container my-auto vh-75">
-  <div class="row ">
-    <div class="col-md-6 d-flex align-items-center">
-      <!-- <div class="d-flex align-items-center justify-content-center m-auto" style="height: 200px;"> -->
-        <div class="m-auto text-center">
-          <h1>Have Fun & Learn</h1>
-          <p>Learn phrases before watching videos</p>
-        
-      </div>
-    </div>
-  
-    <div class="col-md-6">
-      <div class="text-center">
-      <!-- Content for the right column goes here -->
-      <img src="/static/20230214_art_no_bg.png" class="img-fluid max-h-100">
-      </div>
-    </div>
-  </div>
-</div>
 
-
-<div class="container">
-  <div class="row">
-  {% for i in range(6) %}
-    <div class="col-md-2 text-center ">
-      <div class="card px-0 mx-0">
-        <a href="/content/{{ video_codes[i] }}">
-          <img src="https://i.ytimg.com/vi/0O_boW9YA7I/hq720.jpg?sqp=-…AFwAcABBg==&rs=AOn4CLBVFL2OZZZeWodftld1LP2oiPpfsA" alt="Example Image">
-        </a>
-        <!-- <img class="card-img-top" src="..." alt="Card image cap">
-        <h5 class="card-title">Card title</h5>
-        <a href="/login" class="w-100"><button class="btn btn-primary btn-block">Click me</button></a> -->
-      </div>
-    </div>
-  {% endfor %}
-  </div>
-</div>
-
-<ul>
-  {% for i in range(length) %}
-  <li>{{ channel_urls[i] }}</li>
-  <li>{{ titles[i] }}</li>
-  <li>{{ video_urls[i] }}</li>
-  <li>{{ thumbnails[i] }}</li>
-  {% endfor %}
-</ul>
+<main class="flex-shrink-0">
+    <header class="bg-dark py-5">
+        <div class="container px-5">
+            <div class="row gx-5 align-items-center justify-content-center">
+                <div class="col-lg-8 col-xl-7 col-xxl-6">
+                    <div class="my-5 text-center text-xl-start">
+                        <h1 class="display-5 fw-bolder text-white mb-2">Have Fun & Learn</h1>
+                        <p class="lead fw-normal text-white-50 mb-4">Learn phrases before watching videos</p>
+                        <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
+                            <a class="btn btn-primary btn-lg px-4 me-sm-3" href="/login">Login</a>
+                            <a class="btn btn-outline-light btn-lg px-4" href="/signup">Signup</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center"><img class="img-fluid rounded-3 my-5" src="static/images.jpeg" alt="..." /></div>
+            </div>
+        </div>
+    </header>
+    <!-- Blog preview section-->
+    <section class="py-5">
+        <div class="container px-5 my-5">
+          <div class="row gx-5">
+            {% for i in range(4) %}
+            <div class="col-lg-3 mb-5">
+                <div class="card h-100 shadow border-0">
+                    <img class="card-img-top" src="https://dummyimage.com/600x350/ced4da/6c757d" alt="..." />
+                    <div class="card-body p-4">
+                        <div class="badge bg-primary bg-gradient rounded-pill mb-2">Video</div>
+                        <a class="text-decoration-none link-dark stretched-link" href="/content/<>"><h5 class="card-title mb-3">Title</h5></a>
+                    </div>
+                    <div class="card-footer p-4 pt-0 bg-transparent border-top-0">
+                        <div class="d-flex align-items-end justify-content-between">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</main>
+<!-- Footer-->
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
+<script src="js/scripts.js"></script>
 {% endblock %}
