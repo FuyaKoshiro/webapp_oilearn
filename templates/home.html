@@ -12,10 +12,14 @@
                     <div class="my-5 text-center text-xl-start">
                         <h1 class="display-5 fw-bolder text-white mb-2">Have Fun & Learn</h1>
                         <p class="lead fw-normal text-white-50 mb-4">Learn phrases before watching videos</p>
+                        {% if user %}
+                        <h2>What do you want to watch?</h2>
+                        {% else %}
                         <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
                             <a class="btn btn-primary btn-lg px-4 me-sm-3" href="/login">Login</a>
                             <a class="btn btn-outline-light btn-lg px-4" href="/signup">Signup</a>
                         </div>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center"><img class="img-fluid rounded-3 my-5" src="static/images.jpeg" alt="..." /></div>
