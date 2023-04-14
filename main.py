@@ -8,6 +8,8 @@ from controller.cookies import Cookies
 
 
 app = Flask(__name__)
+app.secret_key = 'secret_key'
+
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -19,9 +21,9 @@ class User(UserMixin):
         self.id = id
 
     def get_username(self):
-        conn = sqlite3.connect('database.db')
+        conn = sqlite3.connect('common/models/database.db')
         cursor = conn.cursor()
-        cursor.execute("SELECT username FROM users WHERE id = ?", (self.id,))
+        cursor.execute("SELECT user_name FROM users WHERE user_id = ?", (self.id,))
         username = cursor.fetchone()[0]
         conn.close()
         return username
@@ -29,7 +31,7 @@ class User(UserMixin):
 @login_manager.user_loader
 def load_user(user_id):
     # Load the user from the database based on the user ID
-    user = User.query.get(int(user_id))
+    user = User(user_id)
     return user
     
 @app.route("/")
@@ -39,6 +41,8 @@ def index():
     cursor.execute("SELECT * FROM videos WHERE channel_url = 'test_channel_url'")
     video_objects = cursor.fetchall()
     conn.close()
+
+    user=current_user
 
     titles = []
     video_urls = []
@@ -58,6 +62,7 @@ def index():
         titles=titles, 
         video_urls=video_urls, 
         thumbnails=thumbnails,
+        user=user
         )
     
 # Define the login route and view function
@@ -74,21 +79,21 @@ def login():
         conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
 
-        cursor.execute("SELECT user_id, user_email, user_password FROM users WHERE user_email = ?", (email_input,))
+        cursor.execute("SELECT user_id, user_name, user_password FROM users WHERE user_email = ?", (email_input,))
         response = cursor.fetchone()
+        user_id_db = response[0]
+        user_name_db = response[1]
         password_db = response[2]
 
         if password_db == password_input:
             print("succeed to log-in")
-
-            user_id = response[0]
-            user = User(id=user_id)
+            user = User(id=user_id_db)
             login_user(user=user)
-            return redirect("/login")
+            return redirect(url_for("login"))
         
         else:
             print("failed to log-in")
-            return redirect("/login")
+            return redirect(url_for("login"))
 
     # Render the login template
     return render_template('login.html')
@@ -108,7 +113,7 @@ def signup():
             return render_template('signup.html', error=error)
 
         # Insert the new user data into the database
-        conn = sqlite3.connect('database.db')
+        conn = sqlite3.connect('common/models/database.db')
         cursor = conn.cursor()
         cursor.execute('INSERT INTO users (user_name, user_email, user_password) VALUES (?, ?, ?)', (name_input, email_input, password_input))
         conn.commit()
@@ -117,8 +122,16 @@ def signup():
         # Log the user in and redirect to the home page
         # Replace with your own user loading logic to get the user object from the database
         user = None 
+        
+        conn = sqlite3.connect('common/models/database.db')
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT user_id, user_name FROM users WHERE user_email = ?", (email_input,))
+        user_id = cursor.fetchone()[0]
+
+        user = User(user_id)
         login_user(user)
-        return redirect("/")
+        return redirect(url_for("index", user=user))
 
     # Render the signup template
     return render_template('signup.html')
@@ -169,7 +182,6 @@ def content(vcode):
         phrases=phrases,
         meanings=meanings,
         user_name=user_name)
-
 
 @app.route("/mypage/", methods=["GET", "POST"])
 @login_required
