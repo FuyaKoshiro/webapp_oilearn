@@ -44,14 +44,12 @@ def index():
 
     user=current_user
 
-    titles = []
-    video_urls = []
+    video_titles = []
     thumbnails = []
     video_codes = []
 
     for i in video_objects:
-        titles.append(i[3])
-        video_urls.append(i[2])
+        video_titles.append(i[3])
         thumbnails.append(i[4])
         video_codes.append(i[0])
 
@@ -59,8 +57,7 @@ def index():
     return render_template(
         "home.html",
         video_codes=video_codes,
-        titles=titles, 
-        video_urls=video_urls, 
+        video_titles=video_titles,  
         thumbnails=thumbnails,
         user=user
         )
@@ -136,52 +133,39 @@ def signup():
     # Render the signup template
     return render_template('signup.html')
 
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
 
-# @app.route("/logout/", methods=["GET", "POST"])
-# def logout():
+@app.route("/content/<video_code>/")
+def content(video_code):
+    
+    print(video_code)
 
-#     cookies = Cookies(cursor=cursor)
-#     user_id = cookies.get_user_id()
-#     user_name = cookies.get_user_name(user_id=user_id)
+    conn = sqlite3.connect('common/models/database.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM videos WHERE video_code = ?", (video_code,))
+    video_objects = cursor.fetchone()
+    conn.commit()
+    conn.close()
 
-#     if request.method == "POST":
-#         res = make_response(redirect("/"))
-#         res.delete_cookie("user_name")
-#         print("cookie is deleted")
-#         return res
-
-#     return render_template("logout.html", user_name=user_name)
-
-
-@app.route("/content/<vcode>/")
-def content(vcode):
-
-    cookies = Cookies(cursor=cursor)
-    user_id = cookies.get_user_id()
-    user_name = cookies.get_user_name(user_id=user_id)
-
-    cursor.execute("SELECT * FROM videos WHERE video_code = ?", (vcode,))
-    video_objects = cursor.fetchall()
-
-    phrases = []
-    meanings = []
-
-    url = video_objects[0][3]
-    title = video_objects[0][2]
-
-    for i in video_objects:
-        phrases.append(i[5])
-        meanings.append(i[6])
-
-    print(url, title, phrases, meanings)
+    channel_url = video_objects[1]
+    video_url = video_objects[2]
+    video_title = video_objects[3]
+    video_thumbnail_path = video_objects[4]
+    phrases = video_objects[5]
+    meanings = video_objects[6]
 
     return render_template(
         "content.html",
-        url=url,
-        title=title,
+        channel_url=channel_url,
+        video_url=video_url,
+        video_title=video_title,
+        video_thumbnail_path=video_thumbnail_path,
         phrases=phrases,
-        meanings=meanings,
-        user_name=user_name)
+        meanings=meanings)
 
 @app.route("/mypage/", methods=["GET", "POST"])
 @login_required
