@@ -42,7 +42,7 @@ def index():
     video_objects = cursor.fetchall()
     conn.close()
 
-    user=current_user
+    user_is_logged_in = current_user.is_authenticated
 
     video_titles = []
     thumbnails = []
@@ -59,7 +59,7 @@ def index():
         video_codes=video_codes,
         video_titles=video_titles,  
         thumbnails=thumbnails,
-        user=user
+        user_is_logged_in=user_is_logged_in
         )
     
 # Define the login route and view function
@@ -73,7 +73,7 @@ def login():
         email_input = request.form.get("email")
         password_input = request.form.get("password")
 
-        conn = sqlite3.connect('database.db')
+        conn = sqlite3.connect('common/models/database.db')
         cursor = conn.cursor()
 
         cursor.execute("SELECT user_id, user_name, user_password FROM users WHERE user_email = ?", (email_input,))
@@ -86,7 +86,7 @@ def login():
             print("succeed to log-in")
             user = User(id=user_id_db)
             login_user(user=user)
-            return redirect(url_for("login"))
+            return redirect(url_for("index"))
         
         else:
             print("failed to log-in")
@@ -107,7 +107,7 @@ def signup():
         if password_input != confirm_password:
             # Passwords don't match, show error message
             error = 'Passwords do not match.'
-            return render_template('signup.html', error=error)
+            return render_template('signup.html', error=error, )
 
         # Insert the new user data into the database
         conn = sqlite3.connect('common/models/database.db')
@@ -141,22 +141,25 @@ def logout():
 
 @app.route("/content/<video_code>/")
 def content(video_code):
-    
-    print(video_code)
 
+    #channel video_url, phrases, meanings
     conn = sqlite3.connect('common/models/database.db')
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM videos WHERE video_code = ?", (video_code,))
-    video_objects = cursor.fetchone()
-    conn.commit()
+    cursor.execute(f"""
+                SELECT v.channel_url, v.video_url, v.video_title, v.video_thumbnail_path, vv.phrase, vv.meaning 
+                FROM videos v INNER JOIN video_{video_code} vv
+                ON v.video_code = vv.video_code""")
+    
+    response = cursor.fetchall()
     conn.close()
 
-    channel_url = video_objects[1]
-    video_url = video_objects[2]
-    video_title = video_objects[3]
-    video_thumbnail_path = video_objects[4]
-    phrases = video_objects[5]
-    meanings = video_objects[6]
+    channel_url = response[0][0]
+    video_url = response[0][1]
+    video_title = response[0][2]
+    video_thumbnail_path = response[0][3]
+    phrases = [response[i][1] for i in range(len(response))]
+    meanings = [response[i][2] for i in range(len(response))]
+    length = len(phrases)
 
     return render_template(
         "content.html",
@@ -165,7 +168,8 @@ def content(video_code):
         video_title=video_title,
         video_thumbnail_path=video_thumbnail_path,
         phrases=phrases,
-        meanings=meanings)
+        meanings=meanings,
+        length=length)
 
 @app.route("/mypage/", methods=["GET", "POST"])
 @login_required
