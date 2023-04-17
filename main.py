@@ -38,28 +38,23 @@ def load_user(user_id):
 def index():
     conn = sqlite3.connect('common/models/database.db')
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM videos WHERE channel_url = 'test_channel_url'")
+    cursor.execute("SELECT * FROM videos WHERE channel_url = 'test_channel_url_1'")
     video_objects = cursor.fetchall()
     conn.close()
 
+    video_codes = [item[0] for item in video_objects]    
+    video_titles = [item[3] for item in video_objects]
+    video_thumbnail_paths = [item[4] for item in video_objects]
+
+    #change the items in home.html corresponding to users' login status
     user_is_logged_in = current_user.is_authenticated
-
-    video_titles = []
-    thumbnails = []
-    video_codes = []
-
-    for i in video_objects:
-        video_titles.append(i[3])
-        thumbnails.append(i[4])
-        video_codes.append(i[0])
-
 
     return render_template(
         "home.html",
-        video_codes=video_codes,
-        video_titles=video_titles,  
-        thumbnails=thumbnails,
-        user_is_logged_in=user_is_logged_in
+        video_codes = video_codes,
+        video_titles = video_titles,  
+        video_thumbnail_paths = video_thumbnail_paths,
+        user_is_logged_in = user_is_logged_in
         )
     
 # Define the login route and view function
@@ -157,8 +152,8 @@ def content(video_code):
     video_url = response[0][1]
     video_title = response[0][2]
     video_thumbnail_path = response[0][3]
-    phrases = [response[i][1] for i in range(len(response))]
-    meanings = [response[i][2] for i in range(len(response))]
+    phrases = [response[i][4] for i in range(len(response))]
+    meanings = [response[i][5] for i in range(len(response))]
     length = len(phrases)
 
     return render_template(
