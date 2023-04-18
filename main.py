@@ -136,8 +136,20 @@ def logout():
 
 @app.route("/content/<video_code>/")
 def content(video_code):
+    """
+    If POST request is passed, add a selected item to the user's list (mypage_"user_id" database)
+    By using JavaScript in the front, pass the request in a json format.
+    After adding the data into the user's database, change the button into "Remove".
+    ->To do this, phrase ids need to be added to each video_"video_code" database.
+    ->phrase id should be "video_code + No." to specify which video are the phrases included in
+    """
+    if request.method == "POST":
+        phrase = request.form["phrase"]
+        meaning = request.form["meaning"]
 
-    #channel video_url, phrases, meanings
+    """
+    If there is not any POST request, render the "content.html" with the variables
+    """
     conn = sqlite3.connect('common/models/database.db')
     cursor = conn.cursor()
     cursor.execute(f"""
@@ -171,31 +183,25 @@ def content(video_code):
 def mypage():
 
     user_id = current_user.id
-    print(f"user_id: {user_id}")
-
-    if not user_id:
-        return redirect("/login/request/")
 
     """
     If users submit remove button, fix the phrase_id array and update the database
+    Not worked
     """
-
-    if request.method=="POST":
+    # if request.method=="POST":
         
-        phrase_id_to_remove = request.form.get("phrase_id")
+    #     phrase_id_to_remove = request.form.get("phrase_id")
 
-        print("phrase_id_to_remove: ", phrase_id_to_remove)
-        cursor.execute("""
-        DELETE FROM mypage WHERE phrase_id = ?
-        """, (phrase_id_to_remove,))
-        conn.commit()
-
+    #     print("phrase_id_to_remove: ", phrase_id_to_remove)
+    #     cursor.execute("""
+    #     DELETE FROM mypage WHERE phrase_id = ?
+    #     """, (phrase_id_to_remove,))
+    #     conn.commit()
 
     """
-    Display contents based on users' record (phrase_id)
+    Display contents
     1. Extract the data from videos
-    2. Add them into the lists
-    3. Extract the phrases and meanings based on users' phrase_id
+    2. Video
     """
 
     user_mypage = str(user_id) + "_mypage"
