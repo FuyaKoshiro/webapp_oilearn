@@ -1,0 +1,33 @@
+{% extends "index.html" %}
+
+{% block body %}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">Phrase</th>
+          <th scope="col">Meaning</th>
+          <th scope="col">Titles</th>
+          <th scope="col">Remove</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for i in range(length) %}
+        <tr>
+          <td>{{ phrases[i] }}</td>
+          <td>{{ meanings[i] }}</td>
+          <td>{{ video_titles[i] }}</td>
+          <td>
+            <form method="POST">
+              <input type="hidden" name="remove" value="{{ phrase_ids[i] }}">
+              <button type="submit" class="btn btn-outline-secondary">Remove</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div> 
+
+{% endblock %}

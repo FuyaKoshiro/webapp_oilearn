@@ -1,0 +1,26 @@
+{% extends "index.html" %}
+
+{% block body %}
+
+<body>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card mt-5">
+          <div class="card-body">
+            <h1 class="text-center mb-4">Logout Confirmation</h1>
+            <p class="lead text-center">Are you sure you want to log out?</p>
+            <form method="post">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                  <button type="submit" class="btn btn-primary me-md-2" name="logout">Yes, Logout</button>
+                  <a href="/" class="btn btn-secondary">Cancel</a>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+{% endblock %}
