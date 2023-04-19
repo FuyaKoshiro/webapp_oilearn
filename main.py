@@ -2,7 +2,10 @@ from flask import Flask, request, session
 from flask import render_template, redirect, url_for, make_response
 from flask_session import Session
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+
+from waitress import serve
 import sqlite3
+import os
 
 
 app = Flask(__name__)
@@ -11,7 +14,6 @@ app.secret_key = 'secret_key'
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-
 
 #define the user model
 class User(UserMixin):
@@ -310,4 +312,7 @@ def mypage():
                             user_is_logged_in=user_is_logged_in)
 
 if __name__ == '__main__':
-    app.run()
+    app.debug = False
+    PORT = os.environ.get('PORT','5000')
+    #app.run()
+    serve(app, host='0.0.0.0', port=PORT )
