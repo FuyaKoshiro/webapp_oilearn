@@ -4,8 +4,6 @@ from flask_session import Session
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 import sqlite3
 
-from controller.cookies import Cookies
-
 
 app = Flask(__name__)
 app.secret_key = 'secret_key'
@@ -23,17 +21,19 @@ class User(UserMixin):
     def get_username(self):
         conn = sqlite3.connect('common/models/database.db')
         cursor = conn.cursor()
-        cursor.execute("SELECT user_name FROM users WHERE user_id = ?", (self.id,))
+        cursor.execute("SELECT user_name FROM users WHERE user_id = '{}'".format(self.id))
         username = cursor.fetchone()[0]
         conn.close()
         return username
     
+
 @login_manager.user_loader
 def load_user(user_id):
     # Load the user from the database based on the user ID
     user = User(user_id)
     return user
     
+
 @app.route("/")
 def index():
     conn = sqlite3.connect('common/models/database.db')
@@ -45,6 +45,7 @@ def index():
     video_codes = [item[0] for item in video_objects]    
     video_titles = [item[3] for item in video_objects]
     video_thumbnail_paths = [item[4] for item in video_objects]
+    length = len(video_codes)
 
     #change the items in home.html corresponding to users' login status
     user_is_logged_in = current_user.is_authenticated
@@ -54,9 +55,11 @@ def index():
         video_codes = video_codes,
         video_titles = video_titles,  
         video_thumbnail_paths = video_thumbnail_paths,
-        user_is_logged_in = user_is_logged_in
+        user_is_logged_in = user_is_logged_in,
+        length=length
         )
     
+
 # Define the login route and view function
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -71,7 +74,7 @@ def login():
         conn = sqlite3.connect('common/models/database.db')
         cursor = conn.cursor()
 
-        cursor.execute("SELECT user_id, user_name, user_password FROM users WHERE user_email = ?", (email_input,))
+        cursor.execute("SELECT user_id, user_name, user_password FROM users WHERE user_email = '{}'".format(email_input))
         response = cursor.fetchone()
         user_id_db = response[0]
         user_name_db = response[1]
@@ -90,6 +93,7 @@ def login():
     # Render the login template
     return render_template('login.html')
 
+
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
@@ -107,7 +111,7 @@ def signup():
         # Insert the new user data into the database
         conn = sqlite3.connect('common/models/database.db')
         cursor = conn.cursor()
-        cursor.execute('INSERT INTO users (user_name, user_email, user_password) VALUES (?, ?, ?)', (name_input, email_input, password_input))
+        cursor.execute('INSERT INTO users (user_name, user_email, user_password) VALUES ("{}", "{}", "{}")'.format(name_input, email_input, password_input))
         conn.commit()
         conn.close()
 
@@ -118,7 +122,7 @@ def signup():
         conn = sqlite3.connect('common/models/database.db')
         cursor = conn.cursor()
 
-        cursor.execute("SELECT user_id, user_name FROM users WHERE user_email = ?", (email_input,))
+        cursor.execute("SELECT user_id, user_name FROM users WHERE user_email = '{}'".format(email_input))
         user_id = cursor.fetchone()[0]
 
         user = User(user_id)
@@ -128,35 +132,101 @@ def signup():
     # Render the signup template
     return render_template('signup.html')
 
+
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('index'))
 
-@app.route("/content/<video_code>/")
-def content(video_code):
-    """
-    If POST request is passed, add a selected item to the user's list (mypage_"user_id" database)
-    By using JavaScript in the front, pass the request in a json format.
-    After adding the data into the user's database, change the button into "Remove".
-    ->To do this, phrase ids need to be added to each video_"video_code" database.
-    ->phrase id should be "video_code + No." to specify which video are the phrases included in
-    """
-    if request.method == "POST":
-        phrase = request.form["phrase"]
-        meaning = request.form["meaning"]
 
-    """
-    If there is not any POST request, render the "content.html" with the variables
-    """
+@app.route("/content/<video_code>/", methods=["GET", "POST"])
+def content(video_code):
+
+    user_is_logged_in = current_user.is_authenticated
+
+    if user_is_logged_in:
+        user_id = current_user.id
+        user_id = int(user_id)
+        user_id = "test_user_id_{:02d}".format(user_id)
+    else:
+        user_id = None
+
+    if request.method == "POST":
+        print(request.form)
+        print(type(request.form))
+
+        #add an item into a database
+        if "add" in request.form:
+            phrase_id_to_add = request.form["add"]
+
+            #get values to insert into a mypage
+            conn = sqlite3.connect("common/models/database.db")
+            cursor = conn.cursor()
+            cursor.execute(""" 
+                SELECT vv.phrase, vv.meaning, v.channel_url
+                FROM video_{} vv 
+                INNER JOIN videos v ON vv.video_code = v.video_code
+                WHERE vv.phrase_id = "{}"
+                """.format(video_code, phrase_id_to_add))
+            response = cursor.fetchone()
+            conn.close()
+            phrase = response[0]
+            meaning = response[1]
+            video_channel_url = response[2]
+            
+            #Insert the phrase to mypage
+            conn = sqlite3.connect("common/models/database.db")
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT INTO mypage_{} (
+                video_code, user_id, video_channel_url, phrase, meaning, phrase_id
+                ) VALUES ("{}", "{}", "{}", "{}", "{}", "{}")
+                """.format(user_id, video_code, user_id, video_channel_url, phrase, meaning, phrase_id_to_add))
+            conn.commit()
+            conn.close()
+            return redirect(url_for("content", video_code=video_code))
+
+        #remove a row from mypage corresponding to the phrase_id
+        if "remove" in request.form:
+            phrase_id_to_remove = request.form["remove"]
+
+            conn = sqlite3.connect("common/models/database.db")
+            cursor = conn.cursor()
+            cursor.execute("""
+                DELETE FROM mypage_{}
+                WHERE phrase_id = "{}"
+                """.format(user_id, phrase_id_to_remove))
+            conn.commit()
+            conn.close()
+            return redirect(url_for("content", video_code=video_code))
+
+    #if there is not post request, display contents
+    #firstly, get phrases_id from mypage to change the button from "add" to "remove" in "content.html"
+    #if user is not logged in, phrase_id_from_mypage is "None"
+    if user_is_logged_in:
+        conn = sqlite3.connect('common/models/database.db')
+        cursor = conn.cursor()
+        cursor.execute("""
+                    SELECT phrase_id
+                    FROM mypage_{}
+                    WHERE video_code = "{}"
+                    """.format(user_id, video_code))
+        response = cursor.fetchall()
+        conn.close()
+        phrase_id_from_mypage = [item[0] for item in response]
+    
+    else:
+        phrase_id_from_mypage = None
+            
+    #secondaly, get required values from database
     conn = sqlite3.connect('common/models/database.db')
     cursor = conn.cursor()
-    cursor.execute(f"""
-                SELECT v.channel_url, v.video_url, v.video_title, v.video_thumbnail_path, vv.phrase, vv.meaning 
-                FROM videos v INNER JOIN video_{video_code} vv
-                ON v.video_code = vv.video_code""")
-    
+    cursor.execute("""
+                SELECT v.channel_url, v.video_url, v.video_title, v.video_thumbnail_path, vv.phrase, vv.meaning, vv.phrase_id
+                FROM videos v INNER JOIN video_{} vv
+                ON v.video_code = vv.video_code
+                """.format(video_code))
     response = cursor.fetchall()
     conn.close()
 
@@ -166,125 +236,78 @@ def content(video_code):
     video_thumbnail_path = response[0][3]
     phrases = [response[i][4] for i in range(len(response))]
     meanings = [response[i][5] for i in range(len(response))]
+    phrase_ids = [response[i][6] for i in range(len(response))]
     length = len(phrases)
 
     return render_template(
         "content.html",
+        video_code=video_code,
+        user_is_logged_in=user_is_logged_in,
         channel_url=channel_url,
         video_url=video_url,
         video_title=video_title,
         video_thumbnail_path=video_thumbnail_path,
         phrases=phrases,
         meanings=meanings,
+        phrase_ids=phrase_ids,
+        phrase_id_from_mypage=phrase_id_from_mypage,
         length=length)
+
 
 @app.route("/mypage/", methods=["GET", "POST"])
 @login_required
 def mypage():
 
+    user_is_logged_in = current_user.is_authenticated
+
     user_id = current_user.id
+    user_id = int(user_id)
+    user_id = "test_user_id_{:02d}".format(user_id)
+    mypage = "mypage_" + user_id
 
-    """
-    If users submit remove button, fix the phrase_id array and update the database
-    Not worked
-    """
-    # if request.method=="POST":
-        
-    #     phrase_id_to_remove = request.form.get("phrase_id")
+    #if user send a "remove" post request, remove the phrase_id from the mypage database
+    if request.method=="POST":
+        phrase_id_to_remove = request.form["remove"]
+        conn = sqlite3.connect("common/models/database.db")
+        cursor = conn.cursor()
+        cursor.execute("""
+        DELETE FROM {}
+        WHERE phrase_id = "{}"
+        """.format(mypage, phrase_id_to_remove))
+        conn.commit()
+        conn.close()
+        return redirect(url_for("mypage"))
 
-    #     print("phrase_id_to_remove: ", phrase_id_to_remove)
-    #     cursor.execute("""
-    #     DELETE FROM mypage WHERE phrase_id = ?
-    #     """, (phrase_id_to_remove,))
-    #     conn.commit()
-
-    """
-    Display contents
-    1. Extract the data from videos
-    2. Video
-    """
-
-    user_mypage = str(user_id) + "_mypage"
-
+    #display contents from mypage
+    conn = sqlite3.connect("common/models/database.db")
+    cursor = conn.cursor()
     cursor.execute("""
-    SELECT v.channel_url, v.video_url, v.video_title, v.video_thumbnail_path, v.phrases, v.meanings, m.phrase_id, m.datestamp
-    FROM videos v INNER JOIN 
-    """ + user_mypage + """
-    m
-    WHERE v.video_code = m.video_code    
-    """)
+    SELECT m.video_channel_url, m.phrase, m.meaning, m.phrase_id, v.video_url, v.video_title
+    FROM {} m 
+    INNER JOIN videos v ON m.video_code = v.video_code
+    """.format(mypage))
+    response = cursor.fetchall()
+    conn.close()
+    
+    print(response)
+    channel_urls = [item[0] for item in response]
+    phrases = [item[1] for item in response]
+    meanings = [item[2] for item in response]
+    phrase_ids = [item[3] for item in response]
+    video_urls = [item[4] for item in response]
+    video_titles = [item[5] for item in response]
 
-    video_objects = cursor.fetchall()
-
-    channel_urls = []
-    video_urls = []
-    video_titles = []
-    video_thumbnail_paths = []
-    phrases = []
-    meanings = []
-    phrase_ids = []
-    date_stamps = []
-
-    for video_object in video_objects:
-        channel_urls.append(video_object[0])
-        video_urls.append(video_object[1])
-        video_titles.append(video_object[2])
-        video_thumbnail_paths.append(video_object[3])
-        phrases.append(video_object[4])
-        meanings.append(video_object[5])
-        phrase_ids.append(video_object[6])
-        date_stamps.append(video_object[7])
-
-    length = len(video_objects)
-
-    phrases_to_display = []
-    meanings_to_display = []
-
-    for i in phrase_ids:
-        phrases_to_display.append(phrases[i])
-        meanings_to_display.append(meanings[i])
-
-    # phrase_ids = []
-    # dates = []
-    # phrases = []
-    # meanings = []
-    # titles = []
-
-    # cursor.execute("""
-    # SELECT m.phrase_id, m.date, m.phrases, m.meaning, v.title
-    # FROM videos v INNER JOIN mypage m 
-    # WHERE v.video_code = m.video_code
-    # """)
-    # video_objects = cursor.fetchall()
-
-    # for item in video_objects:
-
-    #     phrase_ids.append(item[0])
-    #     dates.append(item[1])
-    #     phrases.append(item[2])
-    #     meanings.append(item[3])
-    #     titles.append(item[4])
-
-
+    length = len(phrase_ids)
 
     return render_template("mypage.html",
                             channel_urls=channel_urls,
+                            phrases=phrases,
+                            meanings=meanings,
+                            phrase_ids=phrase_ids,
                             video_urls=video_urls,
                             video_titles=video_titles,
-                            video_thumbnail_paths=video_thumbnail_paths,
-                            phrases_to_display=phrases_to_display,
-                            meanings_to_display=meanings_to_display,
-                            phrase_ids=phrase_ids,
-                            date_stamps=date_stamps,
-                            user_name=user_name,
-                            lengh=length)
-
-
-
-@app.route("/login/request/")
-def login_request():
-    return render_template("login_request.html")
-
+                            length=length,
+                            user_is_logged_in=user_is_logged_in)
 
 if __name__ == '__main__':
     app.run()
