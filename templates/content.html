@@ -35,70 +35,40 @@
                 <iframe width="80%" height="450px" src="https://www.youtube.com/embed/{{ video_code }}"></iframe>
             </div>
             <div class="title">
-                <h3>Title of Video</h3>
+                <h3>{{ {{ video_title }} }}</h3>
             </div>
         </div>
         <div class="phrase-list-wrapper">
-            <div class="phrase-list-row">
-                <div class="phrase-list-row-items">
-                    <ul>
-                        <li class="phrase-item phrase">phrase</li>
-                        <li class="phrase-item meaning">meaning</li>
-                        <li class="phrase-item add">
-                            <form method="post">
-                                <input type="hidden" name="add" value="{{ phrase_ids[i] }}">
-                                <button type="submit" class="remove-btn">Add</button>
-                            </form>
-                        </li>
-                    </ul>
-                </div>
-            </div>
 
+            {% for i in range(length) %}
             <div class="phrase-list-row">
                 <div class="phrase-list-row-items">
                     <ul>
-                        <li class="phrase-item phrase">phrase</li>
-                        <li class="phrase-item meaning">meaning</li>
+                        <li class="phrase-item phrase">{{ phrases[i] }}</li>
+                        <li class="phrase-item meaning">{{ meanings[i] }}</li>
+                        {% if user_is_logged_in %}
+                        {% if phrase_ids[i] in phrase_id_from_mypage %}
+                        <li class="phrase-item remove">
+                            <form method="post">
+                                <input type="hidden" name="remove" value="{{ phrase_ids[i] }}">
+                                <button type="submit" class="remove-btn">Remove</button>
+                            </form>
+                        </li>
+                        {% else %}
                         <li class="phrase-item add">
                             <form method="post">
                                 <input type="hidden" name="add" value="{{ phrase_ids[i] }}">
-                                <button type="submit" class="remove-btn">Add</button>
+                                <button type="submit" class="add-btn">Add</button>
                             </form>
                         </li>
+                        {% else %}
+                        <li class="phrase-item need-login">need to login</li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
+            {% endfor %}
 
-            <div class="phrase-list-row">
-                <div class="phrase-list-row-items">
-                    <ul>
-                        <li class="phrase-item phrase">phrase</li>
-                        <li class="phrase-item meaning">meaning</li>
-                        <li class="phrase-item add">
-                            <form method="post">
-                                <input type="hidden" name="add" value="{{ phrase_ids[i] }}">
-                                <button type="submit" class="remove-btn">Add</button>
-                            </form>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="phrase-list-row">
-                <div class="phrase-list-row-items">
-                    <ul>
-                        <li class="phrase-item phrase">phrase</li>
-                        <li class="phrase-item meaning">meaning</li>
-                        <li class="phrase-item add">
-                            <form method="post">
-                                <input type="hidden" name="add" value="{{ phrase_ids[i] }}">
-                                <button type="submit" class="remove-btn">Add</button>
-                            </form>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            
         </div>
     </main>
 
