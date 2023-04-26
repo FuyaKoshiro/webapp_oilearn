@@ -5,13 +5,44 @@
 
 .home {
   width: 100%;
-  height: 1000px;
   background-color: rgba(0, 0, 0, 1);
+}
+
+.nav {
+  height: 65px;
+  width: 100%;
+  position: fixed;
+  top: 0px;
+  z-index: 10;
+  background-color: black;
+}
+
+.nav-wrapper {
+  width: 90%;
+  margin: 0 auto;
+}
+
+.nav-logo h2{
+  float: left;
+  margin-right: 40px;
+  color: rgba(35, 111, 33, 1);
+}
+
+.nav-item {
+  float: left;
+  line-height: 65px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-right: 40px;
+  transition: 0.5s;
+}
+
+.nav-item:hover {
+  color:rgba(255, 255, 255, 0.5);
 }
 
 .copy {
   width: 90%;
-  height: 1000px;
+  height: 565px;
   margin: 0 auto;
 }
 
@@ -54,4 +85,65 @@
 
 .login-btn {
     margin-right: 30px;
+}
+
+.cards-wrapper {
+  width: 90%;
+  height: 750px;
+  margin: 0 auto;
+}
+
+.expand-wrapper {
+  height: 30px;
+}
+
+.genre {
+  color:rgba(255, 255, 255, 1);
+  float: left;
+  margin: 0 30px 0 0;
+  line-height: 30px;
+}
+
+.expand {
+  color:rgba(35, 111, 33, 1);
+  float: left;
+  line-height: 30px;
+  transition: 0.5s;
+}
+
+.expand:hover {
+  opacity: 0.5;
+}
+
+.cards-row-wrapper {
+  margin-top: 40px;
+}
+.cards-row {
+  margin-top: 5px;
+}
+
+.card {
+  height: 150px;
+  width: 250px;
+  border: 1px solid white;
+  display: inline-block;
+}
+
+.card img {
+  height: 150px;
+  width: 250px;
+  opacity: 0.9;
+}
+
+.footer {
+  width: 90%;
+  height: 100px;
+}
+
+.footer h3 {
+  padding-left: 100px; 
+  font-weight: normal;
+  font-size: 13px;
+  color:rgba(255, 255, 255, 0.8);
+  line-height: 100px;
 }
