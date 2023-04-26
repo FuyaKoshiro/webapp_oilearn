@@ -1,4 +1,65 @@
-{% extends "index.html" %}
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/Users/fuyakoshiro/programming/english_phrases/webapp_oilearn/static/css/login.css">
+  <script src="https://kit.fontawesome.com/776e7ea19b.js" crossorigin="anonymous"></script>
+  <title>OI Learn</title>
+</head>
+
+<body>
+  <header>
+    <div class="nav">
+      <div class="logo">
+        <h2><a href="/">OI-Learn</a></h2>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="login-wrapper">
+      <div class="login-heading">
+        <h2>Welcome back</h2>
+        <p>New knowledge is waiting for you</p>
+      </div>
+
+      <div class="input-wrapper">
+        <form method="POST">
+          <ul>
+            <li><input type="email" class="email-form" placeholder="Email" name="email"></li>
+            <li><input type="password" class="pass-form" placeholder="Password" name="password"></li>
+            <li><button type="submit" class="submit-btn">Sign in</button></li>
+          </ul>
+        </form>
+      </div>
+
+      <div class="signup">
+        <p>You don't have an account?
+          <a href="/signup">Signup</a>
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <h3>© 2023 Fuya Koshiro.</h3>
+  </footer>
+
+</body>
+
+
+
+
+
+
+
+
+
+
+
+<!-- {% extends "index.html" %}
 
 {% block body %}
 
@@ -35,4 +96,4 @@
     </div>
   </div>
 
-  {% endblock %}
+  {% endblock %} -->
