@@ -1,0 +1,33 @@
+* {
+    font-family: Arial, Helvetica, sans-serif;
+    text-decoration: none;
+}
+
+.nav {
+    height: 65px;
+    width: 100%;
+    position: fixed;
+    top: 0px;
+}
+
+.nav-wrapper {
+    width: 90%;
+    margin: 0 auto;
+    background-color: red;
+}
+
+.nav-logo h2{
+    float: left;
+    margin-right: 30px;
+}
+
+.nav-item {
+    float: left;
+    line-height: 65px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-right: 20px;
+}
+
+.nav-item:hover {
+    color:rgba(255, 255, 255, 0.5);
+}
