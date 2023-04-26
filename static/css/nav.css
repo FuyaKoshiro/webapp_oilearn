@@ -9,12 +9,11 @@
 .nav-wrapper {
     width: 90%;
     margin: 0 auto;
-    background-color: red;
 }
 
 .nav-logo h2{
     float: left;
-    margin-right: 30px;
+    margin-right: 40px;
     color: rgba(35, 111, 33, 1);
 }
 
@@ -22,7 +21,8 @@
     float: left;
     line-height: 65px;
     color: rgba(255, 255, 255, 0.7);
-    margin-right: 20px;
+    margin-right: 40px;
+    transition: 0.5s;
 }
 
 .nav-item:hover {
