@@ -1,52 +1,68 @@
 * {
     font-family: Arial, Helvetica, sans-serif;
     text-decoration: none;
-    color: white;
     list-style: none;
   }
-  
-  body {
-    width: 100%;
-    background-image: url("/static/yosemitte4.jpg");
-    background-size: cover;
-    background-color: rgba(0, 0, 0, 1);
-  }
-  
-  header {
-    height: 65px;
-  }
 
+  body {
+    background-image: url("/static/yosemitte6.jpg");
+    background-size: cover;
+  }
+  
   .nav {
-    width: 90%;
-    margin: 0 auto;
+    height: 65px;
+    width: 100%;
+    position: fixed;
+    top: 0px;
     z-index: 10;
+    background-color: rgba(0, 0, 0, 0.8);
   }
 
   .nav-logo a{
-    color: rgba(255, 255, 255, 1);
+    color: rgba(35, 111, 35, 1);
   }
-
-  .signup-wrapper {
-    margin: 150px auto 0 auto;
+  
+  .nav-wrapper {
     width: 90%;
-    padding-left: 200px;
+    margin: 0 auto;
+  }
+  
+  .nav-logo h2{
+    float: left;
+    margin-right: 40px;
+    color: rgba(35, 111, 33, 1);
+  }
+  
+  .nav-item {
+    float: left;
+    line-height: 65px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-right: 40px;
+    transition: 0.5s;
+  }
+  
+  .nav-item:hover {
+    color:rgba(255, 255, 255, 0.5);
   }
 
-  .signup-wrapper h2 {
-    font-size: 30px;
-    margin: 0;
+  .login-request-wrapper {
+    width: 30%;
+    margin: 200px auto 0 auto;
+    height: 400px;
+    text-align: center;
+    border-radius: 8px;
+    padding: 50px;
   }
 
-  .signup-wrapper p {
-    font-size: 15px;
-    color:rgba(255, 255, 255, 0.8);
+  .login-request-message {
+    color:rgba(255, 255, 255, 1);
   }
 
   ul {
     padding: 0;
   }
 
-  .username-form, .email-form, .pass-form, .pass-confirm-form {
+  .email-form, .pass-form {
     height: 40px;
     width: 290px;
     color: rgba(0, 0, 0, 1);
@@ -70,18 +86,23 @@
     opacity: 0.5;
   }
 
-  .login {
+  .signup {
     font-size: 15px;
   }
 
-  .login a {
+  .signup p {
+    color:rgba(255, 255, 255, 1);
+  }
+
+  .signup a {
     color:rgba(35, 111, 35, 1);
     transition: all 0.5s;
   }
 
-  .login a:hover {
+  .signup a:hover {
     opacity: 0.5;
   }
+
 
   footer {
     width: 90%;

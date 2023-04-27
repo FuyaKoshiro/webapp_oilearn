@@ -6,7 +6,6 @@
 
   body {
     background-color: rgba(0, 0, 0, 1);
-    height: 650px;
   }
   
   .nav {
@@ -16,6 +15,10 @@
     top: 0px;
     z-index: 10;
     background-color: rgba(0, 0, 0, 0.8);
+  }
+
+  .nav-logo a{
+    color: rgba(35, 111, 33, 1);
   }
   
   .nav-wrapper {
@@ -46,6 +49,14 @@
     margin: 65px auto 0 auto;
     /* border: 1px solid white; */
     color: rgba(255, 255, 255, 1);
+  }
+
+  .response_empty_message p {
+    font-weight: normal;
+    color: rgba(255, 255, 255, 1);
+    text-align: center;
+    font-size: 20px;
+    margin-top: 300px;
   }
 
 

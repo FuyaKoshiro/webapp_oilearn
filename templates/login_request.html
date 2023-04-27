@@ -1,36 +1,60 @@
-{% extends "index.html" %}
-
-{% block body %}
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+
 <head>
-  <title>Oops! Login Required</title>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/static/css/login_request.css">
+  <script src="https://kit.fontawesome.com/776e7ea19b.js" crossorigin="anonymous"></script>
+  <title>OI Learn</title>
 </head>
+
 <body>
 
-<div class="container">
-  <div class="row justify-content-center mt-5">
-    <div class="col-md-6">
-      <div class="card">
-        <div class="card-body">
-          <div class="d-flex justify-content-center">
-            <img class="img-fluid rounded-3 my-5" src="data:image/jpeg;base64,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" alt="...">
-          </div>
-          <h1 class="card-title text-center mb-5">Oops! Login Required</h1>
-          <p class="card-text text-center mb-5">You need to login first to use this feature.</p>
-          <div class="d-flex justify-content-center">
-            <a href="/login/" class="btn btn-primary mb-5">Login</a>
-          </div>
+  <header>
+    <div class="nav">
+      <div class="nav-wrapper">
+        <div class="nav-logo">
+          <h2><a href="/">OI-Learn</a></h2>
+        </div>
+        <div class="nav-items">
+          <a class="nav-item" href="/mypage">My Page</a>
+          {% if user_is_logged_in %}
+          <a class="nav-item" href="/logout">Log Out</a>
+          {% else %}
+          <a class="nav-item" href="/login">Log In</a>
+          <a class="nav-item" href="/signup">Sign Up</a>
+          {% endif %}
         </div>
       </div>
     </div>
-  </div>
-</div>
+  </header>
+  <main>
+    <div class="login-request-wrapper">
+      <div class="login-request-message">
+        <h1>Login to unlock the feature.</h1>
+      </div>
+      <div class="input-wrapper">
+        <form method="POST">
+          <ul>
+            <li><input type="email" class="email-form" placeholder="Email" name="email"></li>
+            <li><input type="password" class="pass-form" placeholder="Password" name="password"></li>
+            <li><button type="submit" class="submit-btn">Sign in</button></li>
+          </ul>
+        </form>
+      </div>
+      <div class="signup">
+        <p>You don't have an account?
+          <a href="/signup">Signup</a>
+        </p>
+      </div>
+    </div>
+    </div>
+  </main>
+  <footer>
+    <h3>© 2023 Fuya Koshiro.</h3>
+  </footer>
 
 </body>
-</html>
 
-{% endblock %}
+</html>

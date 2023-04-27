@@ -23,6 +23,10 @@ header {
   background-color: rgba(0, 0, 0, 0.8);
 }
 
+.nav-logo a{
+  color: rgba(35, 111, 35, 1);
+}
+
 .nav-wrapper {
   width: 90%;
   margin: 0 auto;
@@ -128,15 +132,15 @@ header {
 }
 
 .card {
-  height: 150px;
-  width: 250px;
+  height: 120px;
+  width: 210px;
   border: 1px solid white;
   display: inline-block;
 }
 
 .card img {
-  height: 150px;
-  width: 250px;
+  height: 120px;
+  width: 210px;
   opacity: 0.9;
 }
 

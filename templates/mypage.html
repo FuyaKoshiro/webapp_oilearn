@@ -14,7 +14,7 @@
         <div class="nav">
             <div class="nav-wrapper">
                 <div class="nav-logo">
-                    <h2>OI-Learn</h2>
+                    <h2><a href="/">OI-Learn</a></h2>
                 </div>
                 <div class="nav-items">
                     <a class="nav-item" href="/mypage">My Page</a>
@@ -30,11 +30,15 @@
     </header>
 
     <main>
-          <div class="title">
-              <h3>{{ video_title  }}</h3>
-          </div>
+        {% if response_is_empty %}
+        <div class="response_empty_message">
+            <p>There is no phrae in mypage.</p>
+        </div>
+        {% else %}
+        <div class="title">
+            <h3>{{ video_title  }}</h3>
+        </div>
         <div class="phrase-list-wrapper">
-
             {% for i in range(length) %}
             <div class="phrase-list-row">
                 <div class="phrase-list-row-items">
@@ -52,8 +56,8 @@
                 </div>
             </div>
             {% endfor %}
-
         </div>
+        {% endif %}
     </main>
 
     <footer>
