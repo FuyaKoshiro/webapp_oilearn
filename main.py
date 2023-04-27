@@ -314,5 +314,5 @@ def mypage():
 if __name__ == '__main__':
     app.debug = False
     PORT = os.environ.get('PORT','5000')
-    #app.run()
-    serve(app, host='0.0.0.0', port=PORT )
+    app.run()
+    # serve(app, host='0.0.0.0', port=PORT )

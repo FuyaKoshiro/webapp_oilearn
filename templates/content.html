@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/Users/fuyakoshiro/programming/english_phrases/webapp_oilearn/static/css/content.css">
+    <link rel="stylesheet" href="/static/css/content.css">
     <script src="https://kit.fontawesome.com/776e7ea19b.js" crossorigin="anonymous"></script>
     <title>OI Learn</title>
 </head>
@@ -18,12 +18,12 @@
                 </div>
                 <div class="nav-items">
                     <a class="nav-item" href="/mypage">My Page</a>
-                    <!-- {% if user_is_logged_in %} -->
+                    {% if user_is_logged_in %}
                     <a class="nav-item" href="/logout">Log Out</a>
-                    <!-- {% else %} -->
+                    {% else %}
                     <a class="nav-item" href="/login">Log In</a>
                     <a class="nav-item" href="/signup">Sign Up</a>
-                    <!-- {% endif %} -->
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -35,7 +35,7 @@
                 <iframe width="80%" height="450px" src="https://www.youtube.com/embed/{{ video_code }}"></iframe>
             </div>
             <div class="title">
-                <h3>{{ {{ video_title }} }}</h3>
+                <h3>{{ video_title  }}</h3>
             </div>
         </div>
         <div class="phrase-list-wrapper">
@@ -79,68 +79,3 @@
 </body>
 
 </html>
-
-
-
-
-
-
-
-
-
-
-<!-- {% extends "index.html" %}
-
-{% block body %}
-<div class="container text-center py-5">
-    <h3>{{ video_title }}</h3>
-</div>
-<div class="container d-flex justify-content-center align-item-center">
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ video_code }}"></iframe>
-</div>
-
-<div class="container">
-    <div class="table-responsive">
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                <th scope="col">No.</th>
-                <th scope="col">Phrase</th>
-                <th scope="col">Meaning</th>
-                <th scope="col">Add</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for i in range(length) %}
-                <tr>
-                <th scope="row">{{ i }}</th>
-                <td >{{ phrases[i] }}</td>
-                <td>{{ meanings[i] }}</td>
-                {% if user_is_logged_in %}
-                    {% if phrase_ids[i] in phrase_id_from_mypage %}
-                    <form method="POST">
-                        <td>
-                            <input type="hidden" name="remove" value="{{ phrase_ids[i] }}">
-                            <button type="submit" class="btn btn-outline-secondary">Remove</button>
-                        </td>
-                    </form>
-                    {% else %}
-                    <form method="POST">
-                        <td>
-                            <input type="hidden" name="add" value="{{ phrase_ids[i] }}">
-                            <button type="submit" class="btn btn-outline-primary">Add</button>
-                        </td>
-                    </form>
-                    {% endif %}
-                {% else %}
-                    <td>
-                        <p>Need to login</p>
-                    </td>
-                {% endif %}
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
-{% endblock %} -->

@@ -7,7 +7,7 @@
   
   body {
     width: 100%;
-    background-image: url("/static/yosemitte1.jpg");
+    background-image: url("/Users/fuyakoshiro/programming/english_phrases/webapp_oilearn/static/yosemitte4.jpg");
     background-size: cover;
     background-color: rgba(0, 0, 0, 1);
   }
@@ -26,19 +26,18 @@
     color: rgba(35, 111, 35, 1);
   }
 
-  .login-wrapper {
+  .signup-wrapper {
     margin: 150px auto 0 auto;
     width: 90%;
     padding-left: 200px;
-    margin-bottom: 150px;
   }
 
-  .login-wrapper h2 {
+  .signup-wrapper h2 {
     font-size: 30px;
     margin: 0;
   }
 
-  .login-wrapper p {
+  .signup-wrapper p {
     font-size: 15px;
     color:rgba(255, 255, 255, 0.8);
   }
@@ -47,7 +46,7 @@
     padding: 0;
   }
 
-  .email-form, .pass-form {
+  .username-form, .email-form, .pass-form, .pass-confirm-form {
     height: 40px;
     width: 290px;
     color: rgba(0, 0, 0, 1);
@@ -71,16 +70,16 @@
     opacity: 0.5;
   }
 
-  .signup {
+  .login {
     font-size: 15px;
   }
 
-  .signup a {
+  .login a {
     color:rgba(35, 111, 35, 1);
     transition: all 0.5s;
   }
 
-  .signup a:hover {
+  .login a:hover {
     opacity: 0.5;
   }
 

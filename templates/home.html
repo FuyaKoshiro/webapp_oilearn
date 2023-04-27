@@ -1,17 +1,10 @@
-<!-- {% extends "index.html" %} 
-
-{% block body %} 
-{% endblock %}
--->
-
 <!doctype html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/Users/fuyakoshiro/programming/english_phrases/webapp_oilearn/static/css/nav.css">
-    <link rel="stylesheet" href="/Users/fuyakoshiro/programming/english_phrases/webapp_oilearn/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/style.css">
     <script src="https://kit.fontawesome.com/776e7ea19b.js" crossorigin="anonymous"></script>
     <title>OI Learn</title>
 </head>
@@ -25,12 +18,12 @@
                 </div>
                 <div class="nav-items">
                     <a class="nav-item" href="/mypage">My Page</a>
-                    <!-- {% if user_is_logged_in %} -->
+                    {% if user_is_logged_in %}
                     <a class="nav-item" href="/logout">Log Out</a>
-                    <!-- {% else %} -->
+                    {% else %}
                     <a class="nav-item" href="/login">Log In</a>
                     <a class="nav-item" href="/signup">Sign Up</a>
-                    <!-- {% endif %} -->
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -41,11 +34,11 @@
                 <p>Input phrases before you watch videos or read articles.</p>
             </div>
             <div class="login">
-                <!-- {% if user_is_logged_in %} -->
+                {% if user_is_logged_in %}
+                {% else %}
                 <a class="login-btn btn" href="/login">Login</a>
-                <!-- {% else %} -->
                 <a class="sign-up btn" href="/signup">Signup</a>
-                <!-- {% endif %} -->
+                {% endif %}
             </div>
         </div>
     </header>
@@ -60,12 +53,12 @@
                     </a>
                 </div>
                 <div class="cards-row">
-                    <!-- {% for i in range(length) %} -->
+                    {% for i in range(length) %}
                     <a class="card" href="/content/{{ video_codes[i] }}">
                         <img
                             src="https://i.ytimg.com/vi/5EsICTVo2dM/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLDi_7UFyiMsslAVR8lLdms2TJtPPw">
                     </a>
-                    <!-- {% endfor %} -->
+                    {% endfor %}
                 </div>
             </div>
         </div>

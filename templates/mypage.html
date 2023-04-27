@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/Users/fuyakoshiro/programming/english_phrases/webapp_oilearn/static/css/mypage.css">
+    <link rel="stylesheet" href="/static/css/mypage.css">
     <script src="https://kit.fontawesome.com/776e7ea19b.js" crossorigin="anonymous"></script>
     <title>OI Learn</title>
 </head>
@@ -18,12 +18,12 @@
                 </div>
                 <div class="nav-items">
                     <a class="nav-item" href="/mypage">My Page</a>
-                    <!-- {% if user_is_logged_in %} -->
+                    {% if user_is_logged_in %}
                     <a class="nav-item" href="/logout">Log Out</a>
-                    <!-- {% else %} -->
+                    {% else %}
                     <a class="nav-item" href="/login">Log In</a>
                     <a class="nav-item" href="/signup">Sign Up</a>
-                    <!-- {% endif %} -->
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -35,7 +35,7 @@
           </div>
         <div class="phrase-list-wrapper">
 
-            <!-- {% for i in range(length) %} -->
+            {% for i in range(length) %}
             <div class="phrase-list-row">
                 <div class="phrase-list-row-items">
                     <ul>
@@ -51,7 +51,7 @@
                     </ul>
                 </div>
             </div>
-            <!-- {% endfor %} -->
+            {% endfor %}
 
         </div>
     </main>

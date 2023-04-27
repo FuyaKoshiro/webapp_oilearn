@@ -3,9 +3,15 @@
   text-decoration: none;
 }
 
-.home {
+body {
   width: 100%;
   background-color: rgba(0, 0, 0, 1);
+}
+
+header {
+  background-image: url("/static/yosemitte3.jpg");
+  background-size: cover;
+  height: 650px;
 }
 
 .nav {
@@ -14,7 +20,7 @@
   position: fixed;
   top: 0px;
   z-index: 10;
-  background-color: black;
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
 .nav-wrapper {
@@ -134,12 +140,12 @@
   opacity: 0.9;
 }
 
-.footer {
+footer {
   width: 90%;
   height: 100px;
 }
 
-.footer h3 {
+footer h3 {
   padding-left: 100px; 
   font-weight: normal;
   font-size: 13px;
