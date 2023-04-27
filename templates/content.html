@@ -1,55 +1,81 @@
-{% extends "index.html" %}
+<!doctype html>
+<html lang="en">
 
-{% block body %}
-<div class="container text-center py-5">
-    <h3>{{ video_title }}</h3>
-</div>
-<div class="container d-flex justify-content-center align-item-center">
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ video_code }}"></iframe>
-</div>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/css/content.css">
+    <script src="https://kit.fontawesome.com/776e7ea19b.js" crossorigin="anonymous"></script>
+    <title>OI Learn</title>
+</head>
 
-<div class="container">
-    <div class="table-responsive">
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                <th scope="col">No.</th>
-                <th scope="col">Phrase</th>
-                <th scope="col">Meaning</th>
-                <th scope="col">Add</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for i in range(length) %}
-                <tr>
-                <th scope="row">{{ i }}</th>
-                <td >{{ phrases[i] }}</td>
-                <td>{{ meanings[i] }}</td>
-                {% if user_is_logged_in %}
-                    {% if phrase_ids[i] in phrase_id_from_mypage %}
-                    <form method="POST">
-                        <td>
-                            <input type="hidden" name="remove" value="{{ phrase_ids[i] }}">
-                            <button type="submit" class="btn btn-outline-secondary">Remove</button>
-                        </td>
-                    </form>
+<body>
+    <header>
+        <div class="nav">
+            <div class="nav-wrapper">
+                <div class="nav-logo">
+                    <h2>OI-Learn</h2>
+                </div>
+                <div class="nav-items">
+                    <a class="nav-item" href="/mypage">My Page</a>
+                    {% if user_is_logged_in %}
+                    <a class="nav-item" href="/logout">Log Out</a>
                     {% else %}
-                    <form method="POST">
-                        <td>
-                            <input type="hidden" name="add" value="{{ phrase_ids[i] }}">
-                            <button type="submit" class="btn btn-outline-primary">Add</button>
-                        </td>
-                    </form>
+                    <a class="nav-item" href="/login">Log In</a>
+                    <a class="nav-item" href="/signup">Sign Up</a>
                     {% endif %}
-                {% else %}
-                    <td>
-                        <p>Need to login</p>
-                    </td>
-                {% endif %}
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
-{% endblock %}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="video-wrapper">
+            <div class="video-embed">
+                <iframe width="80%" height="450px" src="https://www.youtube.com/embed/{{ video_code }}"></iframe>
+            </div>
+            <div class="title">
+                <h3>{{ video_title  }}</h3>
+            </div>
+        </div>
+        <div class="phrase-list-wrapper">
+
+            {% for i in range(length) %}
+            <div class="phrase-list-row">
+                <div class="phrase-list-row-items">
+                    <ul>
+                        <li class="phrase-item phrase">{{ phrases[i] }}</li>
+                        <li class="phrase-item meaning">{{ meanings[i] }}</li>
+                        {% if user_is_logged_in %}
+                        {% if phrase_ids[i] in phrase_id_from_mypage %}
+                        <li class="phrase-item remove">
+                            <form method="post">
+                                <input type="hidden" name="remove" value="{{ phrase_ids[i] }}">
+                                <button type="submit" class="remove-btn">Remove</button>
+                            </form>
+                        </li>
+                        {% else %}
+                        <li class="phrase-item add">
+                            <form method="post">
+                                <input type="hidden" name="add" value="{{ phrase_ids[i] }}">
+                                <button type="submit" class="add-btn">Add</button>
+                            </form>
+                        </li>
+                        {% else %}
+                        <li class="phrase-item need-login">need to login</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+    </main>
+
+    <footer>
+        <h3>© 2023 Fuya Koshiro.</h3>
+    </footer>
+
+</body>
+
+</html>

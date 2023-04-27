@@ -1,33 +1,64 @@
-{% extends "index.html" %}
+<!doctype html>
+<html lang="en">
 
-{% block body %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/css/mypage.css">
+    <script src="https://kit.fontawesome.com/776e7ea19b.js" crossorigin="anonymous"></script>
+    <title>OI Learn</title>
+</head>
 
-<div class="table-responsive">
-    <table class="table table-bordered table-hover">
-      <thead class="thead-light">
-        <tr>
-          <th scope="col">Phrase</th>
-          <th scope="col">Meaning</th>
-          <th scope="col">Titles</th>
-          <th scope="col">Remove</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for i in range(length) %}
-        <tr>
-          <td>{{ phrases[i] }}</td>
-          <td>{{ meanings[i] }}</td>
-          <td>{{ video_titles[i] }}</td>
-          <td>
-            <form method="POST">
-              <input type="hidden" name="remove" value="{{ phrase_ids[i] }}">
-              <button type="submit" class="btn btn-outline-secondary">Remove</button>
-            </form>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div> 
+<body>
+    <header>
+        <div class="nav">
+            <div class="nav-wrapper">
+                <div class="nav-logo">
+                    <h2>OI-Learn</h2>
+                </div>
+                <div class="nav-items">
+                    <a class="nav-item" href="/mypage">My Page</a>
+                    {% if user_is_logged_in %}
+                    <a class="nav-item" href="/logout">Log Out</a>
+                    {% else %}
+                    <a class="nav-item" href="/login">Log In</a>
+                    <a class="nav-item" href="/signup">Sign Up</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
 
-{% endblock %}
+    <main>
+          <div class="title">
+              <h3>{{ video_title  }}</h3>
+          </div>
+        <div class="phrase-list-wrapper">
+
+            {% for i in range(length) %}
+            <div class="phrase-list-row">
+                <div class="phrase-list-row-items">
+                    <ul>
+                        <li class="phrase-item phrase">{{ phrases[i] }}</li>
+                        <li class="phrase-item meaning">{{ meanings[i] }}</li>
+                        <li class="phrase-item date">date</li>
+                        <li class="phrase-item remove">
+                          <form method="POST">
+                            <input type="hidden" name="remove" value="{{ phrase_ids[i] }}">
+                            <button type="submit" class="remove-btn">Remove</button>
+                          </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+    </main>
+
+    <footer>
+        <h3>© 2023 Fuya Koshiro.</h3>
+    </footer>
+
+</body>
+</html>

@@ -1,56 +1,72 @@
-{% extends "index.html" %} 
+<!doctype html>
+<html lang="en">
 
-{% block body %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://kit.fontawesome.com/776e7ea19b.js" crossorigin="anonymous"></script>
+    <title>OI Learn</title>
+</head>
 
-
-
-<main class="flex-shrink-0">
-    <header class="bg-dark py-5">
-        <div class="container px-5">
-            <div class="row gx-5 align-items-center justify-content-center">
-                <div class="col-lg-8 col-xl-7 col-xxl-6">
-                    <div class="my-5 text-center text-xl-start">
-                        <h1 class="display-5 fw-bolder text-white mb-2">Have Fun & Learn</h1>
-                        <p class="lead fw-normal text-white-50 mb-4">Learn phrases before watching videos</p>
-                        {% if user_is_logged_in %}
-                        <h2>What do you want to watch?</h2>
-                        {% else %}
-                        <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
-                            <a class="btn btn-primary btn-lg px-4 me-sm-3" href="/login">Login</a>
-                            <a class="btn btn-outline-light btn-lg px-4" href="/signup">Signup</a>
-                        </div>
-                        {% endif %}
-                    </div>
+<body>
+    <header>
+        <div class="nav">
+            <div class="nav-wrapper">
+                <div class="nav-logo">
+                    <h2>OI-Learn</h2>
                 </div>
-                <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center"><img class="img-fluid rounded-3 my-5" src="static/images.jpeg" alt="..." /></div>
+                <div class="nav-items">
+                    <a class="nav-item" href="/mypage">My Page</a>
+                    {% if user_is_logged_in %}
+                    <a class="nav-item" href="/logout">Log Out</a>
+                    {% else %}
+                    <a class="nav-item" href="/login">Log In</a>
+                    <a class="nav-item" href="/signup">Sign Up</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="copy">
+            <div class="copy-heading">
+                <h1>Have Fun&Learn</h1>
+                <p>Input phrases before you watch videos or read articles.</p>
+            </div>
+            <div class="login">
+                {% if user_is_logged_in %}
+                {% else %}
+                <a class="login-btn btn" href="/login">Login</a>
+                <a class="sign-up btn" href="/signup">Signup</a>
+                {% endif %}
             </div>
         </div>
     </header>
-    <!-- Blog preview section-->
-    <section class="py-5">
-        <div class="container px-5 my-5">
-          <div class="row gx-5">
-            {% for i in range(length) %}
-            <div class="col-lg-3 mb-5">
-                <div class="card h-100 shadow border-0">
-                    <!-- <img class="card-img-top" src="{{ video_thumbnail_paths[i] }}" alt="{{ video_thumbnail_paths[i] }}"/> -->
-                    <div class="card-body p-4">
-                        <div class="badge bg-primary bg-gradient rounded-pill mb-2">Video</div>
-                        <a class="text-decoration-none link-dark stretched-link" href="/content/{{ video_codes[i] }}"><h5 class="card-title mb-3">{{ video_titles[i] }}</h5></a>
-                    </div>
-                    <div class="card-footer p-4 pt-0 bg-transparent border-top-0">
-                        <div class="d-flex align-items-end justify-content-between">
-                        </div>
-                    </div>
+
+    <main>
+        <div class="cards-wrapper">
+            <div class="cards-row-wrapper">
+                <div class="expand-wrapper">
+                    <p class="genre">Channel Name</p>
+                    <a class="expand" href="#">Expand All
+                        <span class="fa-sharp fa-solid fa-arrow-right" style="color: #236f21"></span>
+                    </a>
+                </div>
+                <div class="cards-row">
+                    {% for i in range(length) %}
+                    <a class="card" href="/content/{{ video_codes[i] }}">
+                        <img
+                            src="https://i.ytimg.com/vi/5EsICTVo2dM/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLDi_7UFyiMsslAVR8lLdms2TJtPPw">
+                    </a>
+                    {% endfor %}
                 </div>
             </div>
-            {% endfor %}
         </div>
-    </section>
-</main>
+    </main>
 
-<!-- Bootstrap core JS-->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Core theme JS-->
-<script src="js/scripts.js"></script>
-{% endblock %}
+    <footer>
+        <h3>© 2023 Fuya Koshiro.</h3>
+    </footer>
+</body>
+
+</html>
