@@ -3,22 +3,16 @@ import sqlite3
 conn = sqlite3.connect("database.db")
 c = conn.cursor()
 
-suffix = -1
-count = 0
+c.execute("""
+ALTER TABLE videos RENAME COLUMN video_thumbnail_path TO video_thumbnail_url;
+""")
 
-for i in range(100):
-    if count % 10 == 0:
-        suffix += 1
-    formatted_suffix = "{:02d}".format(suffix)
-    formatted_i = "{:02d}".format(i)
+"""
+video_code	channel_url	video_url	video_title	video_thumbnail_path
+video_code	phrase	meaning	phrase_id
+"""
 
-    print(f"count: {count}\nformatted_suffix: {formatted_suffix}\nformatted_i: {formatted_i}\n================")
-    c.execute("""
-    UPDATE videos
-    SET channel_url = "test_channel_url_{}"
-    WHERE video_code = "test_video_code_{}";
-    """.format(formatted_suffix, formatted_i))
-    count += 1
+
 
 conn.commit()
 conn.close()
