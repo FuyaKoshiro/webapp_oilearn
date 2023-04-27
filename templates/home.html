@@ -14,7 +14,7 @@
         <div class="nav">
             <div class="nav-wrapper">
                 <div class="nav-logo">
-                    <h2>OI-Learn</h2>
+                    <h2><a href="/">OI-Learn</a></h2>
                 </div>
                 <div class="nav-items">
                     <a class="nav-item" href="/mypage">My Page</a>
@@ -45,22 +45,24 @@
 
     <main>
         <div class="cards-wrapper">
+            {% for i in range(length) %}
             <div class="cards-row-wrapper">
                 <div class="expand-wrapper">
-                    <p class="genre">Channel Name</p>
+                    <p class="genre">{{ video_data_dict_keys[i] }}</p>
                     <a class="expand" href="#">Expand All
                         <span class="fa-sharp fa-solid fa-arrow-right" style="color: #236f21"></span>
                     </a>
                 </div>
                 <div class="cards-row">
-                    {% for i in range(length) %}
-                    <a class="card" href="/content/{{ video_codes[i] }}">
+                    {% for k in range(6) %}
+                    <a class="card" href="/content/{{ video_data_dict[video_data_dict_keys[i]][0][k] }}">
                         <img
                             src="https://i.ytimg.com/vi/5EsICTVo2dM/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLDi_7UFyiMsslAVR8lLdms2TJtPPw">
                     </a>
                     {% endfor %}
                 </div>
             </div>
+            {% endfor %}
         </div>
     </main>
 

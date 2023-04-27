@@ -27,7 +27,7 @@ class User(UserMixin):
         username = cursor.fetchone()[0]
         conn.close()
         return username
-    
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -40,20 +40,47 @@ def load_user(user_id):
 def index():
     conn = sqlite3.connect('common/models/database.db')
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM videos WHERE channel_url = 'test_channel_url_1'")
+    cursor.execute("SELECT * FROM videos")
     video_objects = cursor.fetchall()
     conn.close()
 
-    video_codes = [item[0] for item in video_objects]    
+    video_codes = [item[0] for item in video_objects] 
+    channel_urls = [item[1] for item in video_objects]   
     video_titles = [item[3] for item in video_objects]
     video_thumbnail_paths = [item[4] for item in video_objects]
-    length = len(video_codes)
+
+    channel_url_key = channel_urls[0]
+    video_codes_to_add = []
+    video_titles_to_add = []
+    video_thumbnail_paths_to_add = []
+    video_data_dict = {}
+    video_data_dict_keys = []
+
+    for i in range(len(video_codes)):
+        if channel_url_key == channel_urls[i]:
+            video_codes_to_add.append(video_codes[i])
+            video_titles_to_add.append(video_titles[i])
+            video_thumbnail_paths_to_add.append(video_thumbnail_paths[i])
+        else:
+            video_data_dict[channel_url_key] = [video_codes_to_add, video_titles_to_add, video_thumbnail_paths_to_add]
+            video_data_dict_keys.append(channel_url_key)
+            channel_url_key = channel_urls[i]
+            video_codes_to_add = []
+            video_titles_to_add = []
+            video_thumbnail_paths_to_add = []
+            video_codes_to_add.append(video_codes[i])
+            video_titles_to_add.append(video_titles[i])
+            video_thumbnail_paths_to_add.append(video_thumbnail_paths[i])
+
+    length = len(video_data_dict_keys)
 
     #change the items in home.html corresponding to users' login status
     user_is_logged_in = current_user.is_authenticated
 
     return render_template(
         "home.html",
+        video_data_dict = video_data_dict,
+        video_data_dict_keys=video_data_dict_keys,
         video_codes = video_codes,
         video_titles = video_titles,  
         video_thumbnail_paths = video_thumbnail_paths,
@@ -280,7 +307,7 @@ def mypage():
         conn.close()
         return redirect(url_for("mypage"))
 
-    #display contents from mypage
+    #display contents from mypage (database)
     conn = sqlite3.connect("common/models/database.db")
     cursor = conn.cursor()
     cursor.execute("""
@@ -290,6 +317,13 @@ def mypage():
     """.format(mypage))
     response = cursor.fetchall()
     conn.close()
+
+    response_is_empty = True
+
+    if len(response) != 0:
+        response_is_empty = False
+    
+    print(f"response_is_empty: {response_is_empty}")
     
     print(response)
     channel_urls = [item[0] for item in response]
@@ -302,6 +336,7 @@ def mypage():
     length = len(phrase_ids)
 
     return render_template("mypage.html",
+                           response_is_empty=response_is_empty,
                             channel_urls=channel_urls,
                             phrases=phrases,
                             meanings=meanings,
@@ -311,8 +346,45 @@ def mypage():
                             length=length,
                             user_is_logged_in=user_is_logged_in)
 
+
+@app.route("/login_request", methods=["GET", "POST"])
+def login_request():
+    if request.method == 'POST':
+        # Verify login credentials and load user from database
+        user = None
+
+        #Check if users' input matches to the one from a database
+        email_input = request.form.get("email")
+        password_input = request.form.get("password")
+
+        conn = sqlite3.connect('common/models/database.db')
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT user_id, user_name, user_password FROM users WHERE user_email = '{}'".format(email_input))
+        response = cursor.fetchone()
+        user_id_db = response[0]
+        user_name_db = response[1]
+        password_db = response[2]
+
+        if password_db == password_input:
+            print("succeed to log-in")
+            user = User(id=user_id_db)
+            login_user(user=user)
+            return redirect(url_for("index"))
+        
+        else:
+            print("failed to log-in")
+            return redirect(url_for("login"))
+        
+    return render_template("login_request.html")
+
+
+@login_manager.unauthorized_handler
+def unauthorized_callback():
+    return redirect(url_for('login_request'))
+
 if __name__ == '__main__':
     app.debug = False
-    PORT = os.environ.get('PORT','5000')
+    # PORT = os.environ.get('PORT','5000')
     app.run()
     # serve(app, host='0.0.0.0', port=PORT )
