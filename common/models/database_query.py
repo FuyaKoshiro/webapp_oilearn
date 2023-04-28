@@ -4,15 +4,20 @@ conn = sqlite3.connect("database.db")
 c = conn.cursor()
 
 c.execute("""
-ALTER TABLE videos RENAME COLUMN video_thumbnail_path TO video_thumbnail_url;
+SELECT name FROM sqlite_master WHERE type="table" AND name LIKE "video_test%"
 """)
 
-"""
-video_code	channel_url	video_url	video_title	video_thumbnail_path
-video_code	phrase	meaning	phrase_id
-"""
-
-
-
-conn.commit()
+table_name = c.fetchall()
+table_name = [name[0] for name in table_name]
 conn.close()
+
+print(table_name)
+
+for name in table_name:
+    conn = sqlite3.connect("database.db")
+    c = conn.cursor()
+
+    c.execute("""
+    DROP table {}
+    """.format(name))
+    conn.close()
