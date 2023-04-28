@@ -57,7 +57,7 @@
                     {% for k in range(6) %}
                     <a class="card" href="/content/{{ video_data_dict[video_data_dict_keys[i]][0][k] }}">
                         <img
-                            src="https://i.ytimg.com/vi/5EsICTVo2dM/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLDi_7UFyiMsslAVR8lLdms2TJtPPw">
+                            src="{{ video_data_dict[video_data_dict_keys[i]][2][k] }}">
                     </a>
                     {% endfor %}
                 </div>
