@@ -47,32 +47,44 @@ def index():
     video_codes = [item[0] for item in video_objects] 
     channel_urls = [item[1] for item in video_objects]   
     video_titles = [item[3] for item in video_objects]
-    video_thumbnail_paths = [item[4] for item in video_objects]
+    video_thumbnail_urls = [item[4] for item in video_objects]
 
     channel_url_key = channel_urls[0]
     video_codes_to_add = []
     video_titles_to_add = []
-    video_thumbnail_paths_to_add = []
+    video_thumbnail_urls_to_add = []
     video_data_dict = {}
     video_data_dict_keys = []
 
     for i in range(len(video_codes)):
-        if channel_url_key == channel_urls[i]:
+        if channel_url_key == channel_urls[i] and i < len(video_codes)-1:
+            print("hello")
             video_codes_to_add.append(video_codes[i])
             video_titles_to_add.append(video_titles[i])
-            video_thumbnail_paths_to_add.append(video_thumbnail_paths[i])
+            video_thumbnail_urls_to_add.append(video_thumbnail_urls[i])
+
+        elif channel_url_key == channel_urls[i] and i == len(video_codes)-1:
+            print("hi")
+            video_codes_to_add.append(video_codes[i])
+            video_titles_to_add.append(video_titles[i])
+            video_thumbnail_urls_to_add.append(video_thumbnail_urls[i])
+            video_data_dict[channel_url_key] = [video_codes_to_add, video_titles_to_add, video_thumbnail_urls_to_add]
+            video_data_dict_keys.append(channel_url_key)
+
         else:
-            video_data_dict[channel_url_key] = [video_codes_to_add, video_titles_to_add, video_thumbnail_paths_to_add]
+            video_data_dict[channel_url_key] = [video_codes_to_add, video_titles_to_add, video_thumbnail_urls_to_add]
             video_data_dict_keys.append(channel_url_key)
             channel_url_key = channel_urls[i]
             video_codes_to_add = []
             video_titles_to_add = []
-            video_thumbnail_paths_to_add = []
+            video_thumbnail_urls_to_add = []
             video_codes_to_add.append(video_codes[i])
             video_titles_to_add.append(video_titles[i])
-            video_thumbnail_paths_to_add.append(video_thumbnail_paths[i])
+            video_thumbnail_urls_to_add.append(video_thumbnail_urls[i])
 
     length = len(video_data_dict_keys)
+
+    print(video_data_dict)
 
     #change the items in home.html corresponding to users' login status
     user_is_logged_in = current_user.is_authenticated
@@ -83,7 +95,7 @@ def index():
         video_data_dict_keys=video_data_dict_keys,
         video_codes = video_codes,
         video_titles = video_titles,  
-        video_thumbnail_paths = video_thumbnail_paths,
+        video_thumbnail_urls = video_thumbnail_urls,
         user_is_logged_in = user_is_logged_in,
         length=length
         )
@@ -252,7 +264,7 @@ def content(video_code):
     conn = sqlite3.connect('common/models/database.db')
     cursor = conn.cursor()
     cursor.execute("""
-                SELECT v.channel_url, v.video_url, v.video_title, v.video_thumbnail_path, vv.phrase, vv.meaning, vv.phrase_id
+                SELECT v.channel_url, v.video_url, v.video_title, v.video_thumbnail_url, vv.phrase, vv.meaning, vv.phrase_id
                 FROM videos v INNER JOIN video_{} vv
                 ON v.video_code = vv.video_code
                 """.format(video_code))
