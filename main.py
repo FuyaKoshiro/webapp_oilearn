@@ -3,14 +3,12 @@ from flask import render_template, redirect, url_for, make_response
 from flask_session import Session
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 
-from waitress import serve
 import sqlite3
 import os
 
 
 app = Flask(__name__)
 app.secret_key = 'secret_key'
-
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -58,13 +56,11 @@ def index():
 
     for i in range(len(video_codes)):
         if channel_url_key == channel_urls[i] and i < len(video_codes)-1:
-            print("hello")
             video_codes_to_add.append(video_codes[i])
             video_titles_to_add.append(video_titles[i])
             video_thumbnail_urls_to_add.append(video_thumbnail_urls[i])
 
         elif channel_url_key == channel_urls[i] and i == len(video_codes)-1:
-            print("hi")
             video_codes_to_add.append(video_codes[i])
             video_titles_to_add.append(video_titles[i])
             video_thumbnail_urls_to_add.append(video_thumbnail_urls[i])
@@ -395,8 +391,8 @@ def login_request():
 def unauthorized_callback():
     return redirect(url_for('login_request'))
 
+
 if __name__ == '__main__':
-    app.debug = False
-    # PORT = os.environ.get('PORT','5000')
+    app.debug = True
+    PORT = os.environ.get('PORT','5000')
     app.run()
-    # serve(app, host='0.0.0.0', port=PORT )
